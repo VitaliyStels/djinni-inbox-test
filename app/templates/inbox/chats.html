@@ -2,8 +2,14 @@
 
 {% block content %}
 	<div class="container pt-3">
-		<h1 class="mb-3">Inbox</h1>
-
+		<div class="fields d-flex justify-content-between align-items-center row-mb-3">
+			<h1>Inbox</h1>
+			<select class="" name="sort-type" id="sort-type-select">
+				<option value="smart">Smart</option>
+				<option value="latest">Latest</option>
+			</select>
+		</div>
+		
 		{% for thread in threads %}
 			{% set last_message = thread.last_message %}
 			{% set candidate = thread.candidate %}
@@ -50,12 +56,15 @@
 								{% endif %}
 								
 							</div>
-							<a href="{{ url('inbox_thread', thread.id) }}"><small>Open thread</small></a>
+							<a href="{{ url('inbox_thread', thread.id) }}"><small>Open thread</small></a>	
 						</div>
-						<div class="col-sm-auto">
-							<small class="text-secondary">
-								{{ last_message.created|date('d.m.Y') }}
-							</small>
+						<div class="col-sm-auto text-center">
+							<div class="col-sm-auto">
+								<small class="text-secondary">
+									{{ last_message.created|date('d.m.Y') }}
+								</small>
+							</div>
+							<big class="score_field">{{ thread.calculateScore() }}</big>
 						</div>
 					</div>
 				</div>

@@ -2,6 +2,10 @@ import enum
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 import pycountry
+# from sort import calcScore
+
+def calcScore(exp):
+    return exp
 
 COUNTRY_CHOICES: list[tuple[str, str]] = sorted(
     ((c.alpha_3, c.name) for c in pycountry.countries),
@@ -100,7 +104,15 @@ class Candidate(models.Model):
     last_seen = models.DateTimeField(blank=True, null=True, db_index=True)
     signup_date = models.DateTimeField(auto_now_add=True)
 
-
+    def calculateScore(self):
+        return calcScore(self.experience_years)
+    # def calculateScore(self):
+    #         return JobPosting.exp_years
+            # score = 0
+            # if self.experience_years >= JobPosting.exp_years:
+            #     score += 1
+            # return score
+    
 class Recruiter(models.Model):
     USERTYPE = "recruiter"
 
@@ -279,6 +291,41 @@ class MessageThread(models.Model):
     last_seen_recruiter = models.DateTimeField(null=True)
     last_seen_candidate = models.DateTimeField(null=True)
     created = models.DateTimeField(auto_now_add=True)
+    
+    def calculateScore(self):
+        score = 0
+        jobYears = (self.job.exp_years[:1])
+        candidateExperience = self.candidate.experience_years
+        primaryKeywordCandidate = self.candidate.primary_keyword
+        secondaryKeywordCandidate = self.candidate.secondary_keyword
+        primaryKeywordJob = self.job.primary_keyword
+        salaryMinCandidate = self.candidate.salary_min
+        salaryMaxJob = self.job.salary_max
+
+        # if self.job.secondary_keyword in primaryKeywordCandidate:
+        #     score += 1
+        
+        # if self.job.secondary_keyword in secondaryKeywordCandidate:
+        #     score += 1
+
+        if self.candidate.secondary_keyword == self.job.secondary_keyword:
+            score =+ 1
+
+        if salaryMinCandidate <= salaryMaxJob:
+            score =+ 1
+
+        try:
+            if candidateExperience == int(jobYears): score =+ 1
+            if candidateExperience > int(jobYears): score =+ 2
+        except:
+            score
+        
+
+        return score
+
+    def testFunc(self):
+        return f'Primary keyw: {self.candidate.primary_keyword} Salary_min:{self.candidate.salary_min} {self.candidate.secondary_keyword} {self.job.primary_keyword}'
+        
 
     @property
     def last_message(self):
