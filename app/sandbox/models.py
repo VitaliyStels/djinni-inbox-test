@@ -2,10 +2,23 @@ import enum
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 import pycountry
-# from sort import calcScore
+from . import sorting
+from . import test
 
-def calcScore(exp):
-    return exp
+# def calcScore(candidate, job):
+#     score = 0
+
+#     try:
+#         jExp = int(job.exp_years[:1])
+#     except:
+#         jExp = 0
+
+#     if candidate.experience_years == jExp: score += 1
+#     if candidate.experience_years >= jExp: score += 1
+#     if candidate.primary_keyword == job.primary_keyword: score += 1
+#     if candidate.salary_min <= job.salary_max: score += 1
+
+#     return score
 
 COUNTRY_CHOICES: list[tuple[str, str]] = sorted(
     ((c.alpha_3, c.name) for c in pycountry.countries),
@@ -104,14 +117,6 @@ class Candidate(models.Model):
     last_seen = models.DateTimeField(blank=True, null=True, db_index=True)
     signup_date = models.DateTimeField(auto_now_add=True)
 
-    def calculateScore(self):
-        return calcScore(self.experience_years)
-    # def calculateScore(self):
-    #         return JobPosting.exp_years
-            # score = 0
-            # if self.experience_years >= JobPosting.exp_years:
-            #     score += 1
-            # return score
     
 class Recruiter(models.Model):
     USERTYPE = "recruiter"
@@ -293,23 +298,10 @@ class MessageThread(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     
     def calculateScore(self):
-        # score = 0
-        # jobYears = (self.job.exp_years[:1])
-        # candidateExperience = self.candidate.experience_years
-        # primaryKeywordCandidate = self.candidate.primary_keyword
-        # secondaryKeywordCandidate = self.candidate.secondary_keyword
-        # primaryKeywordJob = self.job.primary_keyword
-        # salaryMinCandidate = self.candidate.salary_min
-        # salaryMaxJob = self.job.salary_max
-        # if self.candidate.secondary_keyword == self.job.secondary_keyword:
-        #     score =+ 1
-
-        # if salaryMinCandidate <= salaryMaxJob:
-        #     score =+ 1
-        return self.candidate.experience_years
+        return sorting.calcScore(self.candidate, self.job)
 
     def testFunc(self):
-        return f'Primary keyw: {self.candidate.primary_keyword} Salary_min:{self.candidate.salary_min} {self.candidate.secondary_keyword} {self.job.primary_keyword}'
+        return test.testF(self.candidate, self.job)
         
 
     @property
