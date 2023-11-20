@@ -293,35 +293,20 @@ class MessageThread(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     
     def calculateScore(self):
-        score = 0
-        jobYears = (self.job.exp_years[:1])
-        candidateExperience = self.candidate.experience_years
-        primaryKeywordCandidate = self.candidate.primary_keyword
-        secondaryKeywordCandidate = self.candidate.secondary_keyword
-        primaryKeywordJob = self.job.primary_keyword
-        salaryMinCandidate = self.candidate.salary_min
-        salaryMaxJob = self.job.salary_max
+        # score = 0
+        # jobYears = (self.job.exp_years[:1])
+        # candidateExperience = self.candidate.experience_years
+        # primaryKeywordCandidate = self.candidate.primary_keyword
+        # secondaryKeywordCandidate = self.candidate.secondary_keyword
+        # primaryKeywordJob = self.job.primary_keyword
+        # salaryMinCandidate = self.candidate.salary_min
+        # salaryMaxJob = self.job.salary_max
+        # if self.candidate.secondary_keyword == self.job.secondary_keyword:
+        #     score =+ 1
 
-        # if self.job.secondary_keyword in primaryKeywordCandidate:
-        #     score += 1
-        
-        # if self.job.secondary_keyword in secondaryKeywordCandidate:
-        #     score += 1
-
-        if self.candidate.secondary_keyword == self.job.secondary_keyword:
-            score =+ 1
-
-        if salaryMinCandidate <= salaryMaxJob:
-            score =+ 1
-
-        try:
-            if candidateExperience == int(jobYears): score =+ 1
-            if candidateExperience > int(jobYears): score =+ 2
-        except:
-            score
-        
-
-        return score
+        # if salaryMinCandidate <= salaryMaxJob:
+        #     score =+ 1
+        return self.candidate.experience_years
 
     def testFunc(self):
         return f'Primary keyw: {self.candidate.primary_keyword} Salary_min:{self.candidate.salary_min} {self.candidate.secondary_keyword} {self.job.primary_keyword}'
@@ -334,3 +319,8 @@ class MessageThread(models.Model):
     class Meta:
         ordering = ("-last_updated",)
         unique_together = (Message.Sender.CANDIDATE, Message.Sender.RECRUITER)
+
+
+class Sorting:
+    RECENT = 'recent'
+    ADVANCED = 'adv'

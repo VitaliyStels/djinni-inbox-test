@@ -5,9 +5,12 @@
 		<div class="fields d-flex justify-content-between align-items-center row-mb-3">
 			<h1>Inbox</h1>
 			<select class="" name="sort-type" id="sort-type-select">
-				<option value="smart">Smart</option>
-				<option value="latest">Latest</option>
+					<option value="recent">Latest</option>
+					<option value="adv">Smart sort</option>
 			</select>
+
+			<a href=".">Common</a>
+			<a href=".?sort=adv">NEW</a>
 		</div>
 		
 		{% for thread in threads %}
